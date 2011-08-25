@@ -1,0 +1,9 @@
+To install this little app:
+
+* Place the files in a folder on your webserver
+* Create a folder called 'photos' (for some reason GIT removed the empty folder from the source)
+* add your geo-tagged photos.
+
+REMEMBER - This is a first draft and will contain bugs. I am working on them as I go and will make new commits each time. Please feel free to log an issue or suggestions to this and I will see what I can do
+
+Copyright 2011 - Mark Mckee - mark (at) soddengecko (dot) com - Released under "do what you want with it and if possible I would love a linkback"
