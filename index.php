@@ -111,60 +111,78 @@ for ($i = 0; $i < count($results); ++$i) {
 }
 
 // used for testing purposes - will be removed in final draft
-print_r($markers);
+//print_r($markers);
 //print_r($PhotoExif);
-
 ?>
 
 <script type="text/javascript">
 //<![CDATA[
   function initialize() {
-    
+
+  	var sites = [
+  	<?php foreach ($markers as $key => $value) { ?>
+	['<?php echo $value[0] ?>', <?php echo $value[2]; ?>, 1, '<a href="photos/<?php echo $value[0] ?>" target="_blank"><img src="photos/<?php echo $value[0] ?>" width="200px" height="180px" /></a><br />Taken on <?php echo $value[3] ?> with <?php echo $value[4] ?> <?php echo $value[5] ?>'],
+    <?php } ?>
+    ];
+
     var myLatlng = new google.maps.LatLng(54.686534,-4.416504);
     
     var myOptions = {
       zoom: 6,
       center: myLatlng,
-      mapTypeId: google.maps.MapTypeId.HYBRID 
+      mapTypeId: google.maps.MapTypeId.ROADMAP 
     }
 
     var map = new google.maps.Map(document.getElementById("map"), myOptions);
-  
+
+	setMarkers(map, sites);		
+	setZoom(map, sites);
 
 
-    <?php
-	foreach ($markers as $key => $value) { 
-	?>
-
-	var contentString<?php echo $key; ?> = '<h1><?php echo $value[0] ?></h1>'+
-	'<a href="photos/<?php echo $value[0] ?>" target="_blank"><img src="photos/<?php echo $value[0] ?>" width="200px" height="180px" /></a>'+
-	'<br />'+
-	'Taken on <?php echo $value[3] ?>'+
-	' with <?php echo $value[4] ?> <?php echo $value[5] ?>'
-	;
-
-	var infowindow<?php echo $key; ?> = new google.maps.InfoWindow({
-    content: contentString<?php echo $key; ?>
+	infowindow = new google.maps.InfoWindow({
+		content: "Loading..."
 	});
-
-	var marker<?php echo $key; ?> = new google.maps.Marker({
-        position: new google.maps.LatLng(<?php echo $value[2]; ?>), 
-        map: map,
-        title:"<?php echo $value[0] ?>",
-        clickable: true,
-        icon: 'lib/img/markers/photo.png',
-        animation: google.maps.Animation.DROP
-    });
-
-    google.maps.event.addListener(marker<?php echo $key; ?>, 'click', function() {
-  	infowindow<?php echo $key ?>.open(map,marker<?php echo $key; ?>);
-	});
-    <?php 
-    } 
-    ?>
-
 
 } //end initialise (spelled with a S)
+
+/* This functions sets the markers (array) */
+function setMarkers(map, markers) {
+	for (var i = 0; i < markers.length; i++) {
+
+		var site = markers[i];
+		var siteLatLng = new google.maps.LatLng(site[1], site[2]);
+
+		var marker = new google.maps.Marker({
+			position: siteLatLng,
+			map: map,
+			title: site[0],
+			zIndex: site[3],
+			html: site[4],
+			icon: 'lib/img/markers/photo.png',
+			// Markers drop on the map
+			animation: google.maps.Animation.DROP
+		});
+
+		google.maps.event.addListener(marker, "click", function () {
+			infowindow.setContent(this.html);
+			infowindow.open(map, this);
+		});
+	}
+}
+
+/* Set the zoom to fit comfortably all the markers in the map */
+function setZoom(map, markers) {
+	var boundbox = new google.maps.LatLngBounds();
+	for ( var i = 0; i < markers.length; i++ )
+	{
+	  boundbox.extend(new google.maps.LatLng(markers[i][1], markers[i][2]));
+	}
+	map.setCenter(boundbox.getCenter());
+	map.fitBounds(boundbox);
+
+
+
+}
 //]]>
 </script>
 
