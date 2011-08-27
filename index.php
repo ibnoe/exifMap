@@ -119,7 +119,7 @@ for ($i = 0; $i < count($results); ++$i) {
 //<![CDATA[
   function initialize() {
 
-  	var sites = [
+  	var photographs = [
   	<?php foreach ($markers as $key => $value) { ?>
 	['<?php echo $value[0] ?>', <?php echo $value[2]; ?>, 1, '<a href="photos/<?php echo $value[0] ?>" target="_blank"><img src="photos/<?php echo $value[0] ?>" width="200px" height="180px" /></a><br />Taken on <?php echo $value[3] ?> with <?php echo $value[4] ?> <?php echo $value[5] ?>'],
     <?php } ?>
@@ -135,9 +135,8 @@ for ($i = 0; $i < count($results); ++$i) {
 
     var map = new google.maps.Map(document.getElementById("map"), myOptions);
 
-	setMarkers(map, sites);		
-	setZoom(map, sites);
-
+	setMarkers(map, photographs);		
+	setZoom(map, photographs);
 
 	infowindow = new google.maps.InfoWindow({
 		content: "Loading..."
@@ -149,15 +148,15 @@ for ($i = 0; $i < count($results); ++$i) {
 function setMarkers(map, markers) {
 	for (var i = 0; i < markers.length; i++) {
 
-		var site = markers[i];
-		var siteLatLng = new google.maps.LatLng(site[1], site[2]);
+		var photograph = markers[i];
+		var photographLatLng = new google.maps.LatLng(photograph[1], photograph[2]);
 
 		var marker = new google.maps.Marker({
-			position: siteLatLng,
+			position: photographLatLng,
 			map: map,
-			title: site[0],
-			zIndex: site[3],
-			html: site[4],
+			title: photograph[0],
+			zIndex: photograph[3],
+			html: photograph[4],
 			icon: 'lib/img/markers/photo.png',
 			// Markers drop on the map
 			animation: google.maps.Animation.DROP
@@ -179,9 +178,6 @@ function setZoom(map, markers) {
 	}
 	map.setCenter(boundbox.getCenter());
 	map.fitBounds(boundbox);
-
-
-
 }
 //]]>
 </script>
